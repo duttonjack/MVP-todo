@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS list;
+
+CREATE TABLE list(
+    listID SERIAL PRIMARY KEY NOT NULL,
+    descr TEXT NOT NULL,
+    completed BOOLEAN DEFAULT false
+);
+
