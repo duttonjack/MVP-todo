@@ -19,6 +19,11 @@ function createEntry(item) {
     return $entryDiv
 }
 
+//Helper function to toggle box color
+function toggleBoxStatus($boxDiv){
+    $boxDiv.attr("id", $boxDiv.attr("id") === "box1" ? "box2" : "box1")
+}
+
 
 // event delegated click handler for box div
 $listContainer.on('click', '.box', function(event){
@@ -28,7 +33,6 @@ $listContainer.on('click', '.box', function(event){
     toggleBoxStatus($clickedBox)
     updateDatabase(listId, newStatus)
 })
-
 
 // event delegated click handler for delete-btn
 $listContainer.on('click', '.delete-btn', function(event) {
@@ -60,10 +64,7 @@ function updateList() {
 }
 
 
-//Helper function to toggle box color
-function toggleBoxStatus($boxDiv){
-    $boxDiv.attr("id", $boxDiv.attr("id") === "box1" ? "box2" : "box1")
-}
+
 
 
 //Fetch block for PATCH request
