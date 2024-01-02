@@ -3,14 +3,7 @@ import pg from 'pg'
 import 'dotenv/config'
 
 
-
 const { Pool } = pg
-// const pool = new Pool ({
-//     user: 'duttonjack',
-//     host: 'localhost',
-//     database: 'todolist',
-//     port: 5432
-// })
 
 const connectionString = process.env.DATABASE_URL
 const pool = new Pool ({
@@ -24,7 +17,7 @@ app.use(express.json())
 app.use(express.static('public'))
 
 app.get('/api/list', (req, res) => {
-    pool.query('SELECT * FROM list ORDER BY  listid;')
+    pool.query('SELECT * FROM list ORDER BY listid;')
     .then((result) => {
         res.send(result.rows)
     })
@@ -48,12 +41,18 @@ app.post('/api/list', (req, res) => {
 })
 
 app.patch('/api/list/:listId', (req, res) => {
-    console.log('made it into server patch handler')
     const listId = req.params.listId
     const status = req.body.completed
     pool.query('UPDATE list SET completed = $2 WHERE listid = $1', [ listId, status ])
         .then((result) => res.status(200).json('Update successful'))
         .catch((error) => res.status(500).json('Patch Server Error'))
+})
+
+app.delete('/api/list/:listId', (req, res) => {
+    const listId = req.params.listId
+    pool.query('DELETE FROM list where listid = $1', [ listId ])
+        .then((result) => res.status(200).json("Deleted entry"))
+        .catch((error) => res.status(500).json("Server error - failed to delete dntry"))
 })
 
 app.listen(expressPort, () => {

@@ -1,6 +1,38 @@
 const $listContainer = $('#listContainer')
 const $inputText = $("#inputArea")
 
+function createEntry(item) {
+    // create elements and add attributes
+    const $entryDiv = $('<div class="entry"><div class="entry-content"></div></div>')
+    const $boxDiv = $('<div class="box"></div>')
+    $boxDiv.attr("id", item.completed ? "box2" : "box1")
+    $boxDiv.attr("data-list-id", item.listid)
+    const $taskDiv = $("<p class='task'>").text(item.descr)
+    const $trashBtn = $("<button class='delete-btn'>🗑️</button>")
+    $trashBtn.attr("data-list-id", item.listid)
+
+    // append in DOM TREE
+    $entryDiv.find('.entry-content').append($boxDiv, $taskDiv)
+    $entryDiv.append($trashBtn)
+    return $entryDiv
+}
+
+$listContainer.on('click', '.box', function(event){
+    // event delegated click handler for box div
+    const $clickedBox = $(this)
+    const listId = $clickedBox.data('list-id')
+    const newStatus = $clickedBox.attr("id") === "box1"
+    toggleBoxStatus($clickedBox)
+    updateDatabase(listId, newStatus)
+})
+
+$listContainer.on('click', '.delete-btn', function(event) {
+    // event delegated click handler for delete-btn
+    const $clickedDeleteBtn = $(this)
+    const listId = $clickedDeleteBtn.data('list-id')
+    deleteEntry(listId)
+})
+
 function updateList() {
     fetch('api/list')
         .then(res => {
@@ -12,22 +44,7 @@ function updateList() {
         .then(data => {
             $listContainer.empty();
             for (item of data){
-                const $entryDiv = $('<div class="entry"><div class="entry-content"></div></div>')
-                const $boxDiv = $('<div class="box"></div>')
-                $boxDiv.attr("id", item.completed ? "box2" : "box1")
-                $boxDiv.attr("data-list-id", item.listid)
-                
-                $boxDiv.on('click', function(event){
-                    const listId = $(this).data("list-id");
-                    const newStatus = $(this).attr("id") === "box1";
-                    toggleBoxStatus($(this));
-                    updateDatabase(listId, newStatus)
-                })
-                const $taskDiv = $("<p class='task'>").text(item.descr)
-                const $trashBtn = $("<button class='delete-btn'>🗑️</button>")
-                // Want to add an event listener for the $trashbuttons here
-                $entryDiv.find('.entry-content').append($boxDiv, $taskDiv)
-                $entryDiv.append($trashBtn)
+                const $entryDiv = createEntry(item)
                 $listContainer.append($entryDiv)
             }        
         })
@@ -41,13 +58,18 @@ function toggleBoxStatus($boxDiv){
 }
 
 function updateDatabase(listId, newStatus){
-    console.log("listID: ", listId)
     fetch(`/api/list/${listId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ completed: newStatus })
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`)
+        }
+        return res.json()
     })
     .then(data => {
         console.log('Database updated successfully:', data)
@@ -59,6 +81,27 @@ function updateDatabase(listId, newStatus){
 document.addEventListener('DOMContentLoaded', function () {
     updateList()
 });
+
+
+function deleteEntry(listId){
+    fetch(`/api/list/${listId}`, {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`)
+        }
+        return res.json()
+    })
+    .then(data => {
+        console.log('Entry Deleted', data)
+        updateList()
+    })
+    .catch(error => console.error("Error Deleting entry: ", error))
+}
 
 
 $("#addButton").on('click', function(event){
