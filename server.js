@@ -23,8 +23,8 @@ const expressPort = 8004;
 app.use(express.json())
 app.use(express.static('public'))
 
-app.get('/list', (req, res) => {
-    pool.query('SELECT * FROM list;')
+app.get('/api/list', (req, res) => {
+    pool.query('SELECT * FROM list ORDER BY  listid;')
     .then((result) => {
         res.send(result.rows)
     })
@@ -34,7 +34,7 @@ app.get('/list', (req, res) => {
     })
 })
 
-app.post('/list', (req, res) => {
+app.post('/api/list', (req, res) => {
     console.log("made it into server Post route")
     const inputText = req.body.text
     console.log(inputText)
@@ -45,6 +45,15 @@ app.post('/list', (req, res) => {
     .catch((error) => {
         res.status(500).json("Post Server Error")
     })
+})
+
+app.patch('/api/list/:listId', (req, res) => {
+    console.log('made it into server patch handler')
+    const listId = req.params.listId
+    const status = req.body.completed
+    pool.query('UPDATE list SET completed = $2 WHERE listid = $1', [ listId, status ])
+        .then((result) => res.status(200).json('Update successful'))
+        .catch((error) => res.status(500).json('Patch Server Error'))
 })
 
 app.listen(expressPort, () => {
