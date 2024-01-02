@@ -12,21 +12,22 @@ function updateList() {
         .then(data => {
             $listContainer.empty();
             for (item of data){
-                console.log(item)
-                const $entryDiv = $('<div class="entry"><div>')
+                const $entryDiv = $('<div class="entry"><div class="entry-content"></div></div>')
                 const $boxDiv = $('<div class="box"></div>')
                 $boxDiv.attr("id", item.completed ? "box2" : "box1")
                 $boxDiv.attr("data-list-id", item.listid)
                 
                 $boxDiv.on('click', function(event){
                     const listId = $(this).data("list-id");
-                    console.log("list-id in updateList funciton: ", listId)
                     const newStatus = $(this).attr("id") === "box1";
                     toggleBoxStatus($(this));
                     updateDatabase(listId, newStatus)
                 })
                 const $taskDiv = $("<p class='task'>").text(item.descr)
-                $entryDiv.append($boxDiv, $taskDiv)
+                const $trashBtn = $("<button class='delete-btn'>🗑️</button>")
+                // Want to add an event listener for the $trashbuttons here
+                $entryDiv.find('.entry-content').append($boxDiv, $taskDiv)
+                $entryDiv.append($trashBtn)
                 $listContainer.append($entryDiv)
             }        
         })
@@ -55,15 +56,12 @@ function updateDatabase(listId, newStatus){
         console.error("Error updating database:", error)
     })
 }
-
 document.addEventListener('DOMContentLoaded', function () {
-    // Code that runs after the DOM is fully loaded
     updateList()
 });
 
-// Event Listeners
+
 $("#addButton").on('click', function(event){
-    // fetch request to server
     const input = $inputText.val().trim()
     console.log("text input:", typeof input, input)
     fetch('/api/list', {
