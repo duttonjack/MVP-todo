@@ -1,5 +1,13 @@
 const $listContainer = $('#listContainer')
 
+document.addEventListener('DOMContentLoaded', function () {
+    // Code that runs after the DOM is fully loaded
+});
+
+// Event Listeners
+
+
+// Fetch Blocks
 fetch("/list")
   .then((res) => res.json())
   .then((data) => {

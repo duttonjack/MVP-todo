@@ -6,6 +6,16 @@ h1 {
 
 #listContainer {
     margin: 20px;
+    flex-grow: 1;
+}
+
+#featuresContainer {
+    margin: 20px;
+    flex: 0 0 250px;
+}
+#bodyContainer {
+    display: flex;
+    gap: 20px
 }
 
 body {
@@ -44,5 +54,17 @@ body {
 }
 
 p {
+    font-family: 'Inter', sans-serif;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: 'Inter', sans-serif;
+}
+
+button {
     font-family: 'Inter', sans-serif;
 }
