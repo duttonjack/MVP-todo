@@ -1,7 +1,36 @@
 h1 {
     font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+#listContainer {
+    margin: 20px;
 }
 
 body {
-    background-color: blue;
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin: 0;
+}
+
+.box {
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px; 
+}
+
+.entry {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+.task {
+    margin: 0;
 }
