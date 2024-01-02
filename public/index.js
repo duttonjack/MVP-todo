@@ -1,6 +1,8 @@
 const $listContainer = $('#listContainer')
 const $inputText = $("#inputArea")
 
+
+// Creates the rows for the to do list
 function createEntry(item) {
     // create elements and add attributes
     const $entryDiv = $('<div class="entry"><div class="entry-content"></div></div>')
@@ -17,8 +19,9 @@ function createEntry(item) {
     return $entryDiv
 }
 
+
+// event delegated click handler for box div
 $listContainer.on('click', '.box', function(event){
-    // event delegated click handler for box div
     const $clickedBox = $(this)
     const listId = $clickedBox.data('list-id')
     const newStatus = $clickedBox.attr("id") === "box1"
@@ -26,13 +29,16 @@ $listContainer.on('click', '.box', function(event){
     updateDatabase(listId, newStatus)
 })
 
+
+// event delegated click handler for delete-btn
 $listContainer.on('click', '.delete-btn', function(event) {
-    // event delegated click handler for delete-btn
     const $clickedDeleteBtn = $(this)
     const listId = $clickedDeleteBtn.data('list-id')
     deleteEntry(listId)
 })
 
+
+// Fetch Block for GET Request
 function updateList() {
     fetch('api/list')
         .then(res => {
@@ -53,10 +59,14 @@ function updateList() {
         })
 }
 
+
+//Helper function to toggle box color
 function toggleBoxStatus($boxDiv){
     $boxDiv.attr("id", $boxDiv.attr("id") === "box1" ? "box2" : "box1")
 }
 
+
+//Fetch block for PATCH request
 function updateDatabase(listId, newStatus){
     fetch(`/api/list/${listId}`, {
         method: 'PATCH',
@@ -82,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
     updateList()
 });
 
-
+// Fetch block for DELETE Request
 function deleteEntry(listId){
     fetch(`/api/list/${listId}`, {
         method: 'DELETE',
@@ -103,7 +113,7 @@ function deleteEntry(listId){
     .catch(error => console.error("Error Deleting entry: ", error))
 }
 
-
+// Click Event Handler for Add Task
 $("#addButton").on('click', function(event){
     const input = $inputText.val().trim()
     console.log("text input:", typeof input, input)
