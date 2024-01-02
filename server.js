@@ -24,7 +24,6 @@ app.use(express.json())
 app.use(express.static('public'))
 
 app.get('/list', (req, res) => {
-    console.log("made it in app.get /list")
     pool.query('SELECT * FROM list;')
     .then((result) => {
         res.send(result.rows)
