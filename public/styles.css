@@ -21,6 +21,14 @@ body {
     margin-right: 10px; 
 }
 
+#box1 {
+    background-color: red;
+}
+
+#box2 {
+    background-color: green;
+}
+
 .entry {
     display: flex;
     align-items: center;
